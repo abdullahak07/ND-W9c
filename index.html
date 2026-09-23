@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>COMP6013 Week 9 · Network Endpoint Security</title>
+  <meta name="theme-color" content="#f5f2e9">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="progress"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top">
+      <span class="brand-mark">W9</span>
+      <span><b>COMP6013</b><small>Network Endpoint Security</small></span>
+    </a>
+    <nav aria-label="Lecture sections">
+      <a href="#firewalls">Firewalls</a>
+      <a href="#types">Types</a>
+      <a href="#ids">IDS</a>
+      <a href="#malware">Malware</a>
+      <a href="#defense">Defense</a>
+      <a href="#incident">Incident</a>
+      <a href="#ddos">DDoS</a>
+    </nav>
+    <button class="top-quiz" data-jump="#final">Final quiz</button>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">WEEK 9 · NETWORK SECURITY & CRYPTOGRAPHY</div>
+        <h1>Protect the <span>edge.</span><br>Watch the <span>inside.</span></h1>
+        <p class="hero-lead">A practical class guide to firewalls, intrusion detection, malware defense, incident handling, forensics and DDoS protection.</p>
+        <div class="hero-actions">
+          <button class="primary" data-jump="#firewalls">Start lecture</button>
+          <button class="secondary" id="flipAll">Flip all playcards</button>
+        </div>
+        <div class="direct-grid hero-facts">
+          <article><b>Firewall</b><span>Control what crosses a boundary.</span></article>
+          <article><b>IDS</b><span>Detect suspicious behavior.</span></article>
+          <article><b>Malware defense</b><span>Block, observe and contain.</span></article>
+          <article><b>DDoS</b><span>Keep legitimate service available.</span></article>
+        </div>
+      </div>
+
+      <aside class="hero-board">
+        <div class="board-title">THIS WEEK IN 60 SECONDS</div>
+        <ol>
+          <li><span>01</span><b>Control traffic</b><small>Firewalls and policy</small></li>
+          <li><span>02</span><b>Track context</b><small>Stateful inspection</small></li>
+          <li><span>03</span><b>Detect intrusion</b><small>HIDS, NIDS, misuse, anomaly</small></li>
+          <li><span>04</span><b>Contain malware</b><small>Traffic, payload, endpoint</small></li>
+          <li><span>05</span><b>Respond</b><small>Incident management + forensics</small></li>
+          <li><span>06</span><b>Preserve service</b><small>DDoS defenses</small></li>
+        </ol>
+      </aside>
+    </section>
+
+    <section class="section" id="firewalls">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">01 · FIREWALL FOUNDATIONS</div>
+          <h2>A firewall is a controlled choke point.</h2>
+        </div>
+        <p>It sits between networks, enforces local policy, provides a place for auditing, and adds another defensive layer. It can also be used internally to separate parts of an enterprise.</p>
+      </div>
+
+      <div class="callout">
+        <b>Remember:</b>
+        <span>A firewall complements host security. It does not replace host security.</span>
+      </div>
+
+      <div class="direct-grid three">
+        <article class="plain-card">
+          <span class="num">1</span>
+          <h3>All traffic passes through</h3>
+          <p>Inside-to-outside and outside-to-inside traffic should pass the firewall.</p>
+        </article>
+        <article class="plain-card">
+          <span class="num">2</span>
+          <h3>Only authorised traffic passes</h3>
+          <p>Rules implement the organisation's security policy.</p>
+        </article>
+        <article class="plain-card">
+          <span class="num">3</span>
+          <h3>The firewall is hardened</h3>
+          <p>The firewall itself must resist penetration.</p>
+        </article>
+      </div>
+
+      <h3 class="subhead">Four ways a firewall controls access</h3>
+      <div class="term-strip">
+        <div><b>Service</b><span>Which services?</span></div>
+        <div><b>Direction</b><span>Which way?</span></div>
+        <div><b>User</b><span>Which user?</span></div>
+        <div><b>Behavior</b><span>How is the service used?</span></div>
+      </div>
+
+      <div class="playcard-grid">
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>FLIP 01</i><b>What can a firewall do?</b><small>Capabilities</small><em>↻</em></span>
+          <span class="back"><b>Firewall capabilities</b><small>Single choke point · blocks unauthorised access · protects against some spoofing/routing attacks · provides audit/alert location · can support NAT · can host VPN functions.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>FLIP 02</i><b>What can a firewall NOT do?</b><small>Limitations</small><em>↻</em></span>
+          <span class="back"><b>Firewall limitations</b><small>Cannot protect traffic that bypasses it · cannot fully stop insider threats · cannot control an improperly secured wireless path that avoids it · infected laptops/phones/storage can bring threats inside.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>FLIP 03</i><b>Default discard or forward?</b><small>Policy choice</small><em>↻</em></span>
+          <span class="back"><b>Default discard is safer</b><small>“Not expressly permitted = prohibited.” Default forward is easier for users but offers less security because new threats must be blocked reactively.</small><em>↻</em></span>
+        </button>
+      </div>
+
+      <div class="mini-quiz" data-answer="1">
+        <b>Quick check:</b>
+        <p>Which firewall design goal means unknown traffic is not automatically trusted?</p>
+        <div><button>Make the firewall transparent</button><button>Allow only authorised traffic</button><button>Place it only at the Internet edge</button></div>
+        <small class="feedback"></small>
+      </div>
+    </section>
+
+    <section class="section alt" id="types">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">02 · FIREWALL TYPES</div>
+          <h2>Different firewalls inspect different context.</h2>
+        </div>
+        <p>Start simple at the packet level, then add connection state or application awareness when the policy needs more context.</p>
+      </div>
+
+      <div class="comparison">
+        <div class="comparison-row header"><b>Type</b><b>Looks at</b><b>Strength</b><b>Main trade-off</b></div>
+        <div class="comparison-row"><b>Packet filter</b><span>Packet headers</span><span>Fast + simple</span><span>Little upper-layer context</span></div>
+        <div class="comparison-row"><b>Stateful inspection</b><span>Headers + connection state</span><span>Tracks established sessions</span><span>More state to maintain</span></div>
+        <div class="comparison-row"><b>Application gateway</b><span>Application traffic</span><span>Deep application control</span><span>Processing overhead</span></div>
+        <div class="comparison-row"><b>Circuit gateway</b><span>Connection setup</span><span>Controls allowed circuits</span><span>Usually less payload inspection</span></div>
+      </div>
+
+      <div class="playcard-grid four">
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>PACKET FILTER</i><b>What fields can it use?</b><small>Flip for rule inputs</small><em>↻</em></span>
+          <span class="back"><b>Rule inputs</b><small>Source IP · destination IP · source/destination port · IP protocol · interface. Rules are normally processed top-to-bottom.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>STATEFUL</i><b>Why is state useful?</b><small>Connection context</small><em>↻</em></span>
+          <span class="back"><b>Stateful inspection</b><small>Keeps a directory of established TCP connections. Incoming traffic to high-numbered ports is accepted only when it matches an existing connection profile.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>APPLICATION</i><b>Why more secure?</b><small>Proxy behavior</small><em>↻</em></span>
+          <span class="back"><b>Application-level gateway</b><small>Acts as a relay. It can allow only supported applications/features and log application traffic more precisely, but every connection requires extra processing.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>CIRCUIT</i><b>What does it control?</b><small>Connection permission</small><em>↻</em></span>
+          <span class="back"><b>Circuit-level gateway</b><small>Creates two TCP connections instead of one end-to-end connection. It mainly decides which connections are allowed and then relays traffic.</small><em>↻</em></span>
+        </button>
+      </div>
+
+      <h3 class="subhead">Packet-filter attacks → countermeasures</h3>
+      <div class="attack-grid">
+        <article><b>IP spoofing</b><span>Outside packet pretends to have an internal source IP.</span><strong>Drop “internal-source” packets arriving on the external interface.</strong></article>
+        <article><b>Source routing</b><span>Sender tries to force a route that bypasses controls.</span><strong>Discard packets using source-routing options.</strong></article>
+        <article><b>Tiny fragments</b><span>TCP header information is split to evade header-based rules.</span><strong>Require enough transport header in the first fragment and track later fragments.</strong></article>
+      </div>
+
+      <div class="callout compact">
+        <b>DMZ idea:</b>
+        <span>Externally reachable services can sit between external and internal firewalls so compromise of a public service does not automatically expose the internal network.</span>
+      </div>
+
+      <div class="mini-quiz" data-answer="2">
+        <b>Quick check:</b>
+        <p>Which firewall type keeps track of established TCP connections?</p>
+        <div><button>Simple packet filter</button><button>Circuit-level only</button><button>Stateful inspection</button></div>
+        <small class="feedback"></small>
+      </div>
+    </section>
+
+    <section class="section" id="ids">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">03 · INTRUSION DETECTION</div>
+          <h2>Detection asks: “Does this behavior look like an intrusion?”</h2>
+        </div>
+        <p>An IDS gathers evidence and provides real-time or near-real-time warning of attempts to access resources in an unauthorised way.</p>
+      </div>
+
+      <div class="versus">
+        <div>
+          <span>HIDS</span>
+          <h3>Host-based IDS</h3>
+          <p>Monitors one host, including processes, user accounts, files and system activity.</p>
+          <strong>Best view: what actually happened on this host.</strong>
+        </div>
+        <div class="vs">VS</div>
+        <div>
+          <span>NIDS</span>
+          <h3>Network-based IDS</h3>
+          <p>Monitors traffic on a network segment and analyzes network, transport and application protocols.</p>
+          <strong>Best view: what crossed this network segment.</strong>
+        </div>
+      </div>
+
+      <div class="pipeline">
+        <div><span>1</span><b>Sensor</b><small>Collect packets, logs, system calls</small></div>
+        <i>→</i>
+        <div><span>2</span><b>Analyzer</b><small>Decide whether intrusion occurred</small></div>
+        <i>→</i>
+        <div><span>3</span><b>User interface</b><small>View output and control behavior</small></div>
+      </div>
+
+      <div class="direct-grid two">
+        <article class="plain-card accent">
+          <span class="tag-mini">MISUSE DETECTION</span>
+          <h3>Known pattern</h3>
+          <p>Matches activity against rules/signatures that represent known attacks.</p>
+          <b>+ Fewer false alarms</b>
+          <b>− Misses novel attacks</b>
+        </article>
+        <article class="plain-card accent">
+          <span class="tag-mini">ANOMALY DETECTION</span>
+          <h3>Different from normal</h3>
+          <p>Builds normal behavior profiles and looks for significant deviations.</p>
+          <b>+ Can catch unknown attacks</b>
+          <b>− False-positive / false-negative trade-off</b>
+        </article>
+      </div>
+
+      <div class="playcard-grid">
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>FALSE POSITIVE</i><b>Alarm, but no attack</b><small>What does this mean?</small><em>↻</em></span>
+          <span class="back"><b>False positive</b><small>The test says “attack” but the attack condition is not actually present. Too many false positives waste analyst time.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>FALSE NEGATIVE</i><b>No alarm, but attack exists</b><small>What does this mean?</small><em>↻</em></span>
+          <span class="back"><b>False negative</b><small>The test says “no attack” even though the attack condition is present. This is dangerous because malicious activity remains undetected.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>HIDS ANOMALY</i><b>Two common strategies</b><small>Threshold vs profile</small><em>↻</em></span>
+          <span class="back"><b>Threshold + profile</b><small>Threshold detection counts event frequency against preset limits. Profile-based detection learns normal activity for a user/account and looks for behavior changes.</small><em>↻</em></span>
+        </button>
+      </div>
+
+      <h3 class="subhead">NIDS: three signature styles</h3>
+      <div class="term-strip">
+        <div><b>String</b><span>Suspicious text</span></div>
+        <div><b>Port</b><span>Connections to risky/unused ports</span></div>
+        <div><b>Header</b><span>Dangerous or illogical header combinations</span></div>
+      </div>
+
+      <div class="callout compact">
+        <b>NIDS placement:</b>
+        <span>Outside the main firewall · in the DMZ · behind internal firewalls near backbone/server networks · behind internal firewalls near departmental LANs.</span>
+      </div>
+
+      <div class="mini-quiz" data-answer="0">
+        <b>Quick check:</b>
+        <p>Which detection approach is better at spotting a previously unknown attack?</p>
+        <div><button>Anomaly detection</button><button>Misuse/signature detection only</button><button>Port filtering only</button></div>
+        <small class="feedback"></small>
+      </div>
+    </section>
+
+    <section class="section alt" id="malware">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">04 · MALICIOUS SOFTWARE</div>
+          <h2>Malware attacks the endpoint from many directions.</h2>
+        </div>
+        <p>Malware can destroy data, run intrusive programs, compromise CIA properties, steal information, create persistence, or turn a host into infrastructure for another attack.</p>
+      </div>
+
+      <div class="malware-shelf">
+        <button class="playcard malware-card" aria-pressed="false"><span class="front"><i>01</i><b>Virus</b><small>Needs a host program</small><em>↻</em></span><span class="back"><b>Virus</b><small>Copies itself and infects a computer. It can attach to another program (the host), corrupt/delete data or spread through user actions.</small><em>↻</em></span></button>
+        <button class="playcard malware-card" aria-pressed="false"><span class="front"><i>02</i><b>Worm</b><small>Self-propagates</small><em>↻</em></span><span class="back"><b>Worm</b><small>Self-contained and spreads using network mechanisms without needing to integrate into existing code. Often targets known vulnerabilities.</small><em>↻</em></span></button>
+        <button class="playcard malware-card" aria-pressed="false"><span class="front"><i>03</i><b>Trojan</b><small>Looks legitimate</small><em>↻</em></span><span class="back"><b>Trojan horse</b><small>Appears useful but hides malicious behavior. It may monitor users, steal data or open a backdoor.</small><em>↻</em></span></button>
+        <button class="playcard malware-card" aria-pressed="false"><span class="front"><i>04</i><b>Spyware</b><small>Secret collection</small><em>↻</em></span><span class="back"><b>Spyware</b><small>Secretly gathers information about individuals or organisations without their knowledge.</small><em>↻</em></span></button>
+        <button class="playcard malware-card" aria-pressed="false"><span class="front"><i>05</i><b>Rootkit</b><small>Hide + persist</small><em>↻</em></span><span class="back"><b>Rootkit</b><small>Tools used after root-level access to conceal attacker activity and maintain privileged access covertly.</small><em>↻</em></span></button>
+        <button class="playcard malware-card" aria-pressed="false"><span class="front"><i>06</i><b>Backdoor</b><small>Bypass controls</small><em>↻</em></span><span class="back"><b>Backdoor</b><small>An undocumented access path that bypasses normal security controls and allows stealthy access.</small><em>↻</em></span></button>
+        <button class="playcard malware-card" aria-pressed="false"><span class="front"><i>07</i><b>Mobile code</b><small>Portable executable logic</small><em>↻</em></span><span class="back"><b>Mobile code</b><small>Scripts, macros or portable instructions that can move across heterogeneous platforms and execute with the same semantics.</small><em>↻</em></span></button>
+        <button class="playcard malware-card" aria-pressed="false"><span class="front"><i>08</i><b>Bot</b><small>Zombie host</small><em>↻</em></span><span class="back"><b>Bot</b><small>Malware-installed program used to launch attacks on other systems. Many bots acting together form a botnet.</small><em>↻</em></span></button>
+      </div>
+
+      <div class="mini-quiz" data-answer="1">
+        <b>Quick check:</b>
+        <p>Which malware can self-propagate across networks without integrating into an existing host program?</p>
+        <div><button>Virus</button><button>Worm</button><button>Spyware</button></div>
+        <small class="feedback"></small>
+      </div>
+    </section>
+
+    <section class="section" id="defense">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">05 · MALWARE DEFENSE</div>
+          <h2>Defend before, during and after compromise.</h2>
+        </div>
+        <p>Defense combines real-time monitoring and blocking with post-compromise analysis so controls, signatures and anomaly profiles improve over time.</p>
+      </div>
+
+      <div class="defense-road">
+        <article><span>LIVE</span><b>Network traffic analysis</b><p>Look for malicious flows or major deviations from normal behavior.</p></article>
+        <article><span>LIVE</span><b>Payload analysis</b><p>Inspect payloads for known malicious content or abnormal patterns.</p></article>
+        <article><span>HOST</span><b>Endpoint behavior</b><p>Antivirus, application whitelisting and isolation/container techniques.</p></article>
+        <article><span>AFTER</span><b>Post-compromise learning</b><p>Use incident reports and traffic patterns to improve controls.</p></article>
+      </div>
+
+      <div class="playcard-grid">
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>TRAFFIC ANALYSIS</i><b>Misuse vs anomaly</b><small>Flip for examples</small><em>↻</em></span>
+          <span class="back"><b>Traffic analysis examples</b><small>Misuse: a dramatic traffic surge may indicate DDoS. Anomaly: unexpected DNS patterns may indicate botnet activity.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>PAYLOAD</i><b>Why sandbox?</b><small>Contain first, inspect second</small><em>↻</em></span>
+          <span class="back"><b>Sandboxing</b><small>Quarantine a payload while it is analyzed. Observe behavior safely, then flag or block the payload if it is suspicious.</small><em>↻</em></span>
+        </button>
+        <button class="playcard" aria-pressed="false">
+          <span class="front"><i>ENDPOINT</i><b>Three protection ideas</b><small>Host controls</small><em>↻</em></span>
+          <span class="back"><b>Endpoint controls</b><small>Antivirus using signatures/anomaly detection · application whitelisting · containers that isolate applications/files to reduce damage.</small><em>↻</em></span>
+        </button>
+      </div>
+
+      <div class="mini-quiz" data-answer="2">
+        <b>Quick check:</b>
+        <p>Which technique quarantines suspicious content so its behavior can be observed safely?</p>
+        <div><button>Packet forwarding</button><button>Source routing</button><button>Sandboxing</button></div>
+        <small class="feedback"></small>
+      </div>
+    </section>
+
+    <section class="section alt" id="incident">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">06 · INCIDENT MANAGEMENT & FORENSICS</div>
+          <h2>Detection is useful only if the organisation can respond.</h2>
+        </div>
+        <p>Incident management turns many different logs and alerts into evidence, context, action and lessons for the next incident.</p>
+      </div>
+
+      <div class="incident-pipeline">
+        <div><span>1</span><b>Collect</b></div><i>→</i>
+        <div><span>2</span><b>Aggregate</b></div><i>→</i>
+        <div><span>3</span><b>Normalize</b></div><i>→</i>
+        <div><span>4</span><b>Correlate</b></div><i>→</i>
+        <div><span>5</span><b>Alert</b></div><i>→</i>
+        <div><span>6</span><b>Report</b></div>
+      </div>
+
+      <div class="playcard-grid">
+        <button class="playcard" aria-pressed="false"><span class="front"><i>COLLECT + AGGREGATE</i><b>Why combine sources?</b><small>Firewalls, IDS, OS, routers, DBs...</small><em>↻</em></span><span class="back"><b>Collection + aggregation</b><small>Security systems produce different logs, formats and protocols. Aggregation consolidates them before correlation and retention.</small><em>↻</em></span></button>
+        <button class="playcard" aria-pressed="false"><span class="front"><i>NORMALIZE + CORRELATE</i><b>Why context matters</b><small>Separate events can form one incident</small><em>↻</em></span><span class="back"><b>Normalization + correlation</b><small>Normalize different representations into a common format, then link related alerts/events across systems and time windows.</small><em>↻</em></span></button>
+        <button class="playcard" aria-pressed="false"><span class="front"><i>FORENSICS</i><b>What questions are asked?</b><small>Serious incidents</small><em>↻</em></span><span class="back"><b>Forensic questions</b><small>What happened? When? In what order? What caused it? Who caused it? What enabled it? What was affected and by how much?</small><em>↻</em></span></button>
+      </div>
+
+      <div class="callout">
+        <b>Forensics:</b>
+        <span>Identify, collect, examine and analyze data while preserving integrity and maintaining a strict chain of custody.</span>
+      </div>
+
+      <div class="mini-quiz" data-answer="0">
+        <b>Quick check:</b>
+        <p>Which incident-management step links multiple events that may look harmless in isolation?</p>
+        <div><button>Correlation</button><button>Formatting</button><button>Deletion</button></div>
+        <small class="feedback"></small>
+      </div>
+    </section>
+
+    <section class="section" id="ddos">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">07 · DENIAL OF SERVICE</div>
+          <h2>DDoS attacks availability.</h2>
+        </div>
+        <p>A DoS prevents legitimate users from using a service. A DDoS uses many compromised hosts to flood or exhaust target resources.</p>
+      </div>
+
+      <div class="direct-grid two">
+        <article class="plain-card">
+          <span class="tag-mini">DIRECT DDoS</span>
+          <h3>Attack hosts → target</h3>
+          <p>Compromised zombie machines directly generate attack traffic. Multi-level bot structures make traceback harder.</p>
+        </article>
+        <article class="plain-card">
+          <span class="tag-mini">REFLECTOR DDoS</span>
+          <h3>Zombies → reflectors → target</h3>
+          <p>Spoofed requests use the victim's address, causing uninfected reflectors to send responses toward the victim.</p>
+        </article>
+      </div>
+
+      <h3 class="subhead">Three lines of DDoS defense</h3>
+      <div class="ddos-timeline">
+        <article><span>BEFORE</span><b>Prevention & preemption</b><p>Resource policies, capacity planning and backup resources help the service endure attacks.</p></article>
+        <article><span>DURING</span><b>Detection & filtering</b><p>Detect suspicious traffic quickly and filter packets likely to be part of the attack.</p></article>
+        <article><span>DURING + AFTER</span><b>Traceback & identification</b><p>Try to identify sources so future attacks can be reduced, though this is often too slow for immediate mitigation.</p></article>
+      </div>
+
+      <div class="playcard-grid">
+        <button class="playcard" aria-pressed="false"><span class="front"><i>SYN FLOOD</i><b>What resource is attacked?</b><small>Simple DDoS example</small><em>↻</em></span><span class="back"><b>SYN flood</b><small>A classic resource-consumption attack. The attacker attempts to exhaust target resources by creating many incomplete connection attempts.</small><em>↻</em></span></button>
+        <button class="playcard" aria-pressed="false"><span class="front"><i>WHY DDoS IS HARD</i><b>Why no single answer?</b><small>Flip</small><em>↻</em></span><span class="back"><b>Moving target</b><small>DDoS can consume different resources, use direct or reflector structures, and evolve in many forms. Countermeasures must evolve too.</small><em>↻</em></span></button>
+        <button class="playcard" aria-pressed="false"><span class="front"><i>AVAILABILITY</i><b>What is the security goal?</b><small>Flip</small><em>↻</em></span><span class="back"><b>Keep legitimate service usable</b><small>The defender's aim is not merely to identify attack packets; it is to preserve usable service for legitimate clients.</small><em>↻</em></span></button>
+      </div>
+
+      <div class="mini-quiz" data-answer="1">
+        <b>Quick check:</b>
+        <p>Which DDoS defense happens while the attack is in progress?</p>
+        <div><button>Only forensic archiving</button><button>Detection and filtering</button><button>Only preemption</button></div>
+        <small class="feedback"></small>
+      </div>
+    </section>
+
+    <section class="section final" id="final">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">FINAL · 7 QUESTIONS</div>
+          <h2>Can you defend the endpoint?</h2>
+        </div>
+        <p>Answer once. Correct answers are shown immediately, then your final score appears at the bottom.</p>
+      </div>
+      <div id="finalQuiz"></div>
+    </section>
+  </main>
+
+  <footer>
+    <b>COMP6013 · Week 9</b>
+    <span>Network Endpoint Security</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
